@@ -1,1 +1,42 @@
 
+/*Consulta que me indique la cantidad de instrumentos
+que se encuentren en estado de Recuperación*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {estado: “Recuperación"}
+    },{
+    $group: { //agrupar
+        _id: "$dsc_instrumental", //Lo quiero que aparezca
+        quantity: {
+                $count:{}
+                  }}}])
+
+
+
+
+/*Consulta que me indique la cantidad de usuarios registrados*/
+
+db.p_Usuariol.aggregate(
+[{
+    $group: { //agrupar
+        _id: "$dni", //Lo quiero que aparezca
+        quantity: {
+                $count:{}
+                  }}}])
+
+
+
+
+/*Consulta que me indique la cantidad de operaciones en un día determinado*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {fecha_registro: "2022-08-30T10"}
+    },
+    {
+    $group: { //agrupar
+        _id: "$cantidad", //Lo quiero que aparezca
+        quantity: {
+                $count:{}
+                  }}}])
