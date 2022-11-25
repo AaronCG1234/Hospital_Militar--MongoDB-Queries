@@ -1,0 +1,13 @@
+/*Este procedure te devuelve la cantidad
+  de instrumentales usados en una operación en específico*/
+  
+create procedure pInstrumxOperacion
+@operacion int
+as
+begin
+select pIO.id_instrumental, pI.dsc_instrumental from
+p_Instrumental_Operacion as pIO, p_Instrumental as pI
+where  pIO.id_operacion = @operacion and pIO.id_instrumental=pI.id
+select  count(id_instrumental) as NumTotalInstrumentos from p_Instrumental_Operacion
+where  id_operacion = @operacion
+end
