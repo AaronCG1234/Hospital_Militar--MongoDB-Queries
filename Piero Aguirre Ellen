@@ -1,1 +1,49 @@
 
+/*Consulta que me indica la cantidad de instrumentos
+que se uso en una determina operación*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {operacion: "Cirugia por lesiones deportivas"}
+    },{
+    $group: { //agrupar
+        _id: "$cantidad", //Lo quiero que aparezca
+        quantity: {
+                $count:{}
+                  }}}])
+
+
+
+/*Consulta que me indique la cantidad de instrumentos
+dañados en una operación*/
+
+db.p_Instrumental.aggregate(
+[
+    {
+    $match: {
+        operacion: "Cirugia por lesiones deportivas",
+    }
+    },
+    {
+    $group: { //agrupar
+        _id: "$dsc_estado",
+       quantity: {
+                $count:{}
+                  }}}])
+            
+            
+            
+            
+/*Consulta que me indique los instrumentos que se encuentran Perdidos*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {
+        estado: "Perdido",
+    }},{
+    $group: { //agrupar
+        _id: "$estado",
+        quantity: {
+                $count:{}
+                  }}}])
+
