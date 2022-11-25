@@ -1,45 +1,49 @@
 
-/*Este procedure te devuelve la cantidad
-  de instrumentales usados en una operación en específico*/
-  
-create procedure pInstrumxOperacion
-@operacion int
-as
-begin
-select pIO.id_instrumental, pI.dsc_instrumental from
-p_Instrumental_Operacion as pIO, p_Instrumental as pI
-where  pIO.id_operacion = @operacion and pIO.id_instrumental=pI.id
-select  count(id_instrumental) as NumTotalInstrumentos from p_Instrumental_Operacion
-where  id_operacion = @operacion
-end
+/*Consulta que me indica la cantidad de cada uno 
+de los instrumentales ingresados que se encuentran 
+en estado (En Fase)*/
+
+db.p_Instrumental.aggregate(
+[
+    {
+    $match: {estado: "En fase"}
+    },
+    {
+    $group: { //agrupar
+        _id: "$dsc_instrumental", //Lo quiero que aparezca
+        quantity: {
+                $count:{}
+                  }
+        }
+    }
+]
+)
 
 
-/*Procedure para saber los datos de descripción y almacén de los
-  instrumentales registrados por un usuario*/
-  
-    create procedure ListaInstrumentalxUsuario2
-    @id_usuario int
-    as
-    begin
-        select inst.id,inst.dsc_instrumental,alm.id,alm.dsc_almacen
-        from p_Instrumental as inst
-        join p_Almacen alm on alm.id = inst.id_almacen
-        where   inst.id_usuario = @id_usuario
-    end
+
+/*Consulta que me indica la cantidad de instrumentales de
+cada uno de los almacenes*/
+
+db.p_Instrumental.aggregate(
+[
+{
+    $group: { //agrupar
+        _id: "$almacen", //Lo quiero que aparezca
+        quantity: {
+                $count:{}
+                  }
+        }
+    }
+]
+)
 
 
-/*Procedure para saber los datos de descripcion, fase de los
-  instrumentales registrados por un usuario*/
-  
-create procedure FaceDelInstrumental
-    @id_instrum int
-    as
-    begin
-        select fa.id,fa.dsc_fase,inst.id,
-               inst.dsc_instrumental
-        from p_Instrumental as inst,p_Fase as fa,
-             p_Instrumental_Fase as FaseInst
-        where FaseInst.id_instrumental=@id_instrum and
-              fa.id=FaseInst.id_fase and
-              inst.id=@id_instrum
-    end
+
+/*Como usuario quiero obtener toda mi información registrada,
+para que de esa manera pueda confirmar que son correctos.*/
+
+db.p_Usuario.find(
+{datos_personales:"Sofia-Nuñez-Fajardo",
+dni:716660845,
+password:12345
+})
