@@ -1,1 +1,47 @@
 
+/*Consulta que me indica la cantidad de instrumentales
+diferentes que se encuentran en el almacén A-01*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {almacen: "A-01"}
+    },{
+    $group: { //agrupar
+        _id: "$dsc_instrumental"
+    }},
+    {
+        $count:"quantity"
+    }])
+
+
+
+/*Consulta que me indica la cantidad de instrumentales que se encuentran en el almacén A-01*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {
+        almacen: "A-01",
+    }},{
+    $group: { //agrupar
+        _id: "$dsc_instrumental",
+        total: {
+            $sum:"$cantidad"
+        }}}])
+
+
+
+/*Consulta que me indica los nombres de los instrumentales empaquetados, su cantidad en el almacen y su total de instrumentos*/
+
+db.p_Instrumental.aggregate(
+[{
+    $match: {
+        estado: "Empaquetado",
+    }},{
+    $group: { //agrupar
+        _id: "$dsc_instrumental",
+        total: {
+            $sum:"$cantidad"
+        },
+        en_almacen: {
+            $count: {}
+        }}}])
