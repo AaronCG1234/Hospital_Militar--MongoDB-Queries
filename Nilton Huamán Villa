@@ -1,1 +1,38 @@
 
+/*Consulta que me indica la cantidad de cada uno 
+de los instrumentales ingresados que se encuentran 
+en fase “Roja”*/
+
+db.p_Instrumental.aggregate(
+[
+  {
+ $match:
+        {fase:"Roja"},
+  },
+ {
+$group:
+{
+            _id:"$dsc_instrumental", 
+total:{$sum:"$cantidad"}
+         }
+ }
+ ]
+
+
+
+/*Consulta que me indica la cantidad de instrumentales 
+registrados según cada usuario */
+
+db.p_Instrumental.aggregate(
+[
+  { $match:
+           {$or:[{usuario:"Alicia-Sime-Aguilar"},
+{usuario:"Sofia-Nuñez-Fajardo"}]}
+  },
+ {$group:{
+            _id:"$usuario",total:{$sum:"$cantidad"}
+         }
+ }
+ ]
+)
+
